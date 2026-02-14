@@ -1,7 +1,9 @@
 mod cli;
 mod config;
 mod fs;
+mod index;
 mod util;
+mod walker;
 
 use anyhow::Result;
 use clap::Parser;
