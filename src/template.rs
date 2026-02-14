@@ -7,19 +7,35 @@ pub fn render(
     ext: &str,
     dims: Option<(u32, u32)>,
 ) -> String {
-    let mut result = template.to_string();
+    let mut result = String::new();
+    let mut chars = template.chars().peekable();
 
-    result = result.replace("{parent}", &parent.to_lowercase());
-    result = result.replace("{PARENT}", &parent.to_uppercase());
-    result = result.replace("{N}", &n.to_string());
-    result = result.replace("{ext}", ext);
+    while let Some(c) = chars.next() {
+        if c == '{' {
+            let mut key = String::new();
 
-    if let Some((w, h)) = dims {
-        result = result.replace("{width}", &w.to_string());
-        result = result.replace("{height}", &h.to_string());
-    } else {
-        result = result.replace("{width}", "");
-        result = result.replace("{height}", "");
+            while let Some(&next) = chars.peek() {
+                chars.next();
+                if next == '}' {
+                    break;
+                }
+                key.push(next);
+            }
+
+            let replacement = match key.as_str() {
+                "parent" => parent.to_lowercase(),
+                "PARENT" => parent.to_uppercase(),
+                "N" => n.to_string(),
+                "ext" => ext.to_string(),
+                "width" => dims.map(|d| d.0.to_string()).unwrap_or_default(),
+                "height" => dims.map(|d| d.1.to_string()).unwrap_or_default(),
+                _ => format!("{{{}}}", key),
+            };
+
+            result.push_str(&replacement);
+        } else {
+            result.push(c);
+        }
     }
 
     result
