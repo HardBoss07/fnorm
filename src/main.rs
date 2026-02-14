@@ -1,8 +1,10 @@
+mod cleanup;
 mod cli;
 mod config;
 mod fs;
 mod image_meta;
 mod index;
+mod renamer;
 mod template;
 mod util;
 mod walker;
