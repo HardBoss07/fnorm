@@ -1,7 +1,9 @@
 mod cli;
 mod config;
 mod fs;
+mod image_meta;
 mod index;
+mod template;
 mod util;
 mod walker;
 
