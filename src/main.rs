@@ -1,4 +1,5 @@
 mod cli;
+mod fs;
 mod util;
 
 use anyhow::Result;
