@@ -1,5 +1,3 @@
-use std::path::Path;
-
 pub fn render(
     template: &str,
     parent: &str,

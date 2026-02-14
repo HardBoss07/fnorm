@@ -20,7 +20,14 @@ fn main() -> Result<()> {
     let config = Config::load(cli.config.as_deref())?;
 
     let files = walker::collect_files(&cli.path);
-    let mut indexer = Indexer::new(cli.global);
+
+    let global_mode = if cli.global {
+        true
+    } else {
+        config.index_mode == "global"
+    };
+
+    let mut indexer = Indexer::new(global_mode);
 
     for file in files {
         let parent = file.parent().unwrap();
