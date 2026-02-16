@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use crate::util::exe_dir;
 
-const CONFIG_NAME: &str = ".fname.toml";
+const CONFIG_NAME: &str = ".fnorm.toml";
 
 pub fn read_override(path: &Path) -> Result<String> {
     fs::read_to_string(path).map_err(|e| anyhow!("Failed to read {}: {}", path.display(), e))
