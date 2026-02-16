@@ -1,0 +1,113 @@
+# ==========================================================
+# fnorm Global Configuration
+# ==========================================================
+
+# Default template used when no profile is specified
+default_template = "{parent}-{N}_{width}x{height}.{ext}"
+
+# Indexing behavior:
+#   "per-directory" → reset counter for each subdirectory
+#   "global"        → single incrementing counter
+index_mode = "per-directory"
+
+# If true, CLI --global overrides index_mode
+cli_overrides_index_mode = true
+
+# Characters removed when width/height placeholders disappear
+# Only removes these if directly before {width} or {height}
+cleanup_separators = ["_", "-", " "]
+
+# Pad index numbers (e.g. 01, 002, 0003)
+# 0 disables padding
+index_padding = 0
+
+# Sort files before renaming:
+# "none" | "name" | "extension"
+sort_mode = "name"
+
+# Only process files with these extensions (empty = all)
+# Example: ["jpg", "png", "webp"]
+include_extensions = []
+
+# Exclude these extensions
+exclude_extensions = []
+
+# Lowercase extension output
+force_lowercase_extension = true
+
+
+# ==========================================================
+# Named Template Profiles
+# ==========================================================
+
+# Use with: fnorm --config custom.toml
+# or future support: fnorm --profile preview
+
+[profiles.simple]
+template = "{N}.{ext}"
+
+[profiles.preview]
+template = "{N}-preview.{ext}"
+
+[profiles.dimensions_only]
+template = "{width}x{height}-{N}.{ext}"
+
+[profiles.parent_index]
+template = "{parent}-{N}.{ext}"
+
+[profiles.clean_numeric]
+template = "{N}"
+# Useful for renaming images without extensions if desired
+
+[profiles.uppercase_parent]
+template = "{PARENT}-{N}.{ext}"
+
+[profiles.archive_style]
+template = "{parent}_{width}x{height}_{N}.{ext}"
+
+[profiles.minimal]
+template = "{N}.{ext}"
+
+[profiles.social_media]
+template = "{parent}-{width}x{height}"
+# Extensions preserved automatically via {ext} if added
+
+[profiles.timestamp_style]
+# Future: if timestamp placeholder is implemented
+template = "{parent}-{N}"
+
+[profiles.natural_sequence]
+template = "{parent}-{N}_{ext}"
+
+
+# ==========================================================
+# Image-Specific Behavior
+# ==========================================================
+
+[image]
+
+# If false, files that are not images will not use width/height
+# (they already resolve empty — but this allows future strict mode)
+allow_non_images = true
+
+# If true, files without image metadata are skipped entirely
+skip_if_no_dimensions = false
+
+# Only extract metadata without decoding full image
+metadata_only = true
+
+
+# ==========================================================
+# Future Feature Toggles
+# ==========================================================
+
+[features]
+
+# Prevent renaming if output name equals current name
+skip_if_unchanged = true
+
+# Automatically resolve name collisions
+auto_collision_suffix = true
+
+# Start index at custom number
+start_index = 1
