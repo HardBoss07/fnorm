@@ -2,7 +2,7 @@
 
 A Rust-based command-line bulk renaming tool designed to normalize file names across directories.
 
-Supports recursive walking, dynamic rename templates, image dimension extraction, configuration via `.fname.toml`, dry-run safety, and collision handling.
+Supports recursive walking, dynamic rename templates, image dimension extraction, configuration via `.fnorm.toml`, dry-run safety, and collision handling.
 
 ## Usage
 
@@ -31,7 +31,7 @@ fnorm.exe [OPTIONS] [PATH]
 
 ### Indexing
 
-By default, the `{N}` index resets for every subdirectory. If you run with the `--global` flag, `{N}` increments globally across the entire tree. CLI flags always override settings found inside `.fname.toml`.
+By default, the `{N}` index resets for every subdirectory. If you run with the `--global` flag, `{N}` increments globally across the entire tree. CLI flags always override settings found inside `.fnorm.toml`.
 
 ## Template Engine
 
@@ -63,11 +63,11 @@ Everything outside of curly braces `{}` is treated as a literal string.
 `fnorm` supports layered configuration with the following priority:
 
 1. Command line flag: `--config <path>`
-2. Local `.fname.toml` in the execution directory
-3. Global `.fname.toml` in the executable directory
+2. Local `.fnorm.toml` in the execution directory
+3. Global `.fnorm.toml` in the executable directory
 4. Built-in defaults
 
-### Example `.fname.toml`
+### Example `.fnorm.toml`
 
 ```toml
 default_template = "{parent}-{N}.{ext}"
@@ -112,7 +112,7 @@ test/
     └── picture.png
 ```
 
-With the following template in `.fname.toml`:
+With the following template in `.fnorm.toml`:
 
 ```toml
 default_template = "{parent}-{N}_{width}x{height}.{ext}"

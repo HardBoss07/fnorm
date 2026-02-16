@@ -19,33 +19,40 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     let config = Config::load(cli.config.as_deref())?;
 
-    let files = walker::collect_files(&cli.path);
+    let files = walker::collect_files(&cli.path, &config);
 
-    let global_mode = if cli.global {
+    let global_mode = if config.cli_overrides_index_mode && cli.global {
         true
     } else {
         config.index_mode == "global"
     };
 
-    let mut indexer = Indexer::new(global_mode);
+    let mut indexer = Indexer::new(global_mode, config.features.start_index);
+
+    let template_str = if let Some(profile_name) = &cli.profile {
+        if let Some(profile) = config.profiles.get(profile_name) {
+            &profile.template
+        } else {
+            // Potentially print a warning here in the future
+            &config.default_template
+        }
+    } else {
+        &config.default_template
+    };
 
     for file in files {
         let parent = file.parent().unwrap();
-        let parent_name = parent.file_name().unwrap_or_default().to_string_lossy();
-
-        let ext = file.extension().unwrap_or_default().to_string_lossy();
-
         let n = indexer.next(parent);
 
-        let dims = image_meta::dimensions(&file);
-
-        let rendered = template::render(&config.default_template, &parent_name, n, &ext, dims);
+        let context = template::TemplateContext::new(&file, &config, n, template_str);
+        let rendered = template::render(&context)?;
 
         let cleaned = cleanup::cleanup(rendered, &config.cleanup_separators);
 
-        let new_path = parent.join(cleaned);
+        let proposed_path = parent.join(cleaned);
+        let final_path = renamer::resolve_collision(&proposed_path, &config);
 
-        renamer::rename(&file, &new_path, cli.dry_run())?;
+        renamer::perform_rename(&file, &final_path, cli.dry_run(), &config)?;
     }
 
     Ok(())

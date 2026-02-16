@@ -13,12 +13,15 @@ pub struct Cli {
     #[arg(long)]
     pub global: bool,
 
+    #[arg(long, short = 'a')]
+    pub apply: bool,
+
     #[arg(long)]
-    pub no_dry_run: bool,
+    pub profile: Option<String>,
 }
 
 impl Cli {
     pub fn dry_run(&self) -> bool {
-        !self.no_dry_run
+        !self.apply
     }
 }
